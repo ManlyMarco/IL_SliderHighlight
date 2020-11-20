@@ -73,6 +73,7 @@ namespace SliderHighlight
             if (_smrFac) Destroy(_smrFac.gameObject);
             _hi?.UnpatchAll(_hi.Id);
             _boneSliderLookup = null;
+            _isHighlightCleared = false;
         }
 
         private void InitializeBodySliders()
