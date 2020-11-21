@@ -8,6 +8,6 @@ Plugin for Koikatu! character maker that highlights areas affected by sliders wh
 4. Start character maker and hover over some sliders. Not all sliders will show the highlight, but most should.
 
 ## Screenshots
-None for now
+![highlight preview](https://user-images.githubusercontent.com/39247311/99866555-685c8900-2bb2-11eb-8b65-d10b9e0451b8.png)
 
 Based on bone highlighting proof of concept by essu.
