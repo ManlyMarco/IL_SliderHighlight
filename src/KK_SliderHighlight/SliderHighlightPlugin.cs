@@ -23,7 +23,7 @@ namespace SliderHighlight
     public partial class SliderHighlightPlugin : BaseUnityPlugin
     {
         public const string GUID = "SliderHighlight";
-        public const string Version = "1.0";
+        public const string Version = "1.0.1";
 
         private static Material _mat;
         private static SkinnedMeshRenderer _smrBod;
