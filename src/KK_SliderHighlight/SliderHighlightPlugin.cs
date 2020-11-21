@@ -215,7 +215,7 @@ namespace SliderHighlight
             var smr = rootGo.AddComponent<SkinnedMeshRenderer>();
             smr.rootBone = body.rootBone;
             smr.bones = body.bones;
-            smr.sharedMesh = body.sharedMesh;
+            smr.sharedMesh = Instantiate(body.sharedMesh);
             smr.sharedMaterial = mat;
             return smr;
         }
