@@ -205,7 +205,8 @@ namespace SliderHighlight
 
         private static SkinnedMeshRenderer CreateHighlightRenderer(SkinnedMeshRenderer body, Material mat)
         {
-            var namae = body.name + "_Highlight";
+            // Guard against plugins using StartsWith to find renderers
+            var namae = "Highlight_" + body.name + "_rend";
             DestroyImmediate(body.transform.Find(namae)?.gameObject);
 
             var rootGo = new GameObject(namae);
@@ -215,6 +216,7 @@ namespace SliderHighlight
             var smr = rootGo.AddComponent<SkinnedMeshRenderer>();
             smr.rootBone = body.rootBone;
             smr.bones = body.bones;
+            // Need to make a copy to avoid overwriting stock mesh colors since they are used for some thing by the game
             smr.sharedMesh = Instantiate(body.sharedMesh);
             smr.sharedMaterial = mat;
             return smr;
