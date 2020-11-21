@@ -1,5 +1,5 @@
 # SliderHighlight plugin
-Plugin for Koikatu! and EmotionCreators character maker that highlights areas affected by sliders when hovering over them.
+Plugin for Koikatu! character maker that highlights areas affected by sliders when hovering over them.
 
 ### How to use
 1. Make sure at least [BepInEx v5.3](https://github.com/BepInEx/BepInEx), [KKAPI v1.13.4](https://github.com/ManlyMarco/KKAPI) and [ABMX v4.4](https://github.com/ManlyMarco/ABMX) are installed, and your game is updated.

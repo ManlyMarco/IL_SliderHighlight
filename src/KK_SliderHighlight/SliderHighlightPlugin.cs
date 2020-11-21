@@ -25,6 +25,7 @@ namespace SliderHighlight
         public const string GUID = "SliderHighlight";
         public const string Version = "1.0";
 
+        private static Material _mat;
         private static SkinnedMeshRenderer _smrBod;
         private static SkinnedMeshRenderer _smrFac;
         private static Harmony _hi;
@@ -36,6 +37,11 @@ namespace SliderHighlight
         {
             MakerAPI.MakerBaseLoaded += (s, e) => StartCoroutine(LoadPlugin());
             MakerAPI.MakerExiting += (s, e) => Dispose();
+
+            MakerAPI.ReloadCustomInterface += (s, e) => StartCoroutine(
+                CoroutineUtils.CreateCoroutine(
+                    CoroutineUtils.WaitForEndOfFrame,
+                    () => LoadHighlightBody(MakerAPI.GetCharacterControl())));
         }
 
         private IEnumerator LoadPlugin()
@@ -182,16 +188,18 @@ namespace SliderHighlight
 
         private static void LoadHighlightBody(ChaControl chaControl)
         {
-            var mat = LoadShader();
+            if (_mat == null) _mat = LoadShader();
 
             var renderers = chaControl.objRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+
             var body = renderers.First(x => x.name == "o_body_a");
-            _smrBod = CreateHighlightRenderer(body, mat);
+            _smrBod = CreateHighlightRenderer(body, _mat);
 
             var face = renderers.First(x => x.name == "cf_O_face");
-            _smrFac = CreateHighlightRenderer(face, mat);
+            _smrFac = CreateHighlightRenderer(face, _mat);
 
             // Clear the colors, might be set to something already
+            _isHighlightCleared = false;
             HighlightBones();
         }
 
