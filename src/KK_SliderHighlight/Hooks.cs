@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace SliderHighlight
@@ -13,22 +15,51 @@ namespace SliderHighlight
             /// </summary>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Selectable), "UpdateSelectionState")]
-            private static void OnSliderUpdateSelectionState(Selectable __instance, int ___m_CurrentSelectionState)
+            private static void OnSliderUpdateSelectionState(Selectable __instance, BaseEventData eventData, int ___m_CurrentSelectionState)
             {
                 if (_smrBod == null) return;
 
-                if (___m_CurrentSelectionState == 1 || ___m_CurrentSelectionState == 2)
+                try
                 {
-                    //Console.WriteLine($"focus {___m_CurrentSelectionState} state={__instance.name} ");
-                    if (__instance is Slider sld && _boneSliderLookup.TryGetValue(sld, out var bones))
-                        HighlightBones(bones());
+                    //Console.WriteLine($"focus state={___m_CurrentSelectionState} name={__instance.FullPath()}\n{eventData}");
+                    if (___m_CurrentSelectionState == 1 || ___m_CurrentSelectionState == 2)
+                    {
+                        if (__instance is Slider sld && _boneSliderLookup.TryGetValue(sld, out var bones))
+                            HighlightBones(bones());
+                        else
+                            HighlightBones();
+
+                        if (__instance is Toggle tgl && IsAccessoryButton(tgl, eventData))
+                            SetAccessoryHighlight(GettAccId(tgl));
+                        else
+                            ClearAccessoryHighlight();
+                    }
                     else
+                    {
                         HighlightBones();
+                        ClearAccessoryHighlight();
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    HighlightBones();
+                    UnityEngine.Debug.LogException(e);
                 }
+            }
+
+            private static bool IsAccessoryButton(Toggle tgl, BaseEventData eventData)
+            {
+                if (!tgl.transform.name.StartsWith("tglSlot")) return false;
+                if (eventData is PointerEventData pointerEventData)
+                {
+                    var sourceObj = pointerEventData.pointerCurrentRaycast.gameObject;
+                    return sourceObj == null || sourceObj.name == "imgOff";
+                }
+                return true;
+            }
+
+            private static int GettAccId(Toggle tgl)
+            {
+                return int.Parse(tgl.transform.name.Substring(7)) - 1;
             }
 
             /// <summary>
@@ -40,7 +71,14 @@ namespace SliderHighlight
             {
                 if (_smrBod == null) return;
 
-                HighlightBones();
+                try
+                {
+                    HighlightBones();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
         }
     }

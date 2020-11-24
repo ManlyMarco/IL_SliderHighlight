@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InitAccessory.cs" />
     <Compile Include="InitABMX.cs" />
     <Compile Include="InitBody.cs" />
     <Compile Include="BoneIdLookups.cs" />

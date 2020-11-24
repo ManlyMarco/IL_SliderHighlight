@@ -96,6 +96,11 @@ namespace SliderHighlight
                 ab.Unload(false);
 
                 _mat = new Material(sha);
+                _mat.SetInt("_UseMaterialColor", 0);
+
+                _matSolid = new Material(sha);
+                _matSolid.SetInt("_UseMaterialColor", 1);
+                _matSolid.SetColor("_Color", _highlightColor);
             }
             catch (Exception)
             {
