@@ -68,6 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InitABMX.cs" />
+    <Compile Include="InitBody.cs" />
     <Compile Include="BoneIdLookups.cs" />
     <Compile Include="SliderHighlightPlugin.cs" />
     <Compile Include="Hooks.cs" />
