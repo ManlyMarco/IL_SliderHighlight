@@ -80,6 +80,7 @@ namespace SliderHighlight
             _hi?.UnpatchAll(_hi.Id);
             _boneSliderLookup = null;
             _isHighlightCleared = false;
+            _accMaterialsToRestore.Clear();
         }
 
         private static void LoadShaders()

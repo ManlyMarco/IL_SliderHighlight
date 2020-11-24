@@ -7,7 +7,7 @@ namespace SliderHighlight
 {
     public partial class SliderHighlightPlugin
     {
-        private static readonly List<KeyValuePair<Renderer, Material[]>> _toRemove = new List<KeyValuePair<Renderer, Material[]>>(5);
+        private static readonly List<KeyValuePair<Renderer, Material[]>> _accMaterialsToRestore = new List<KeyValuePair<Renderer, Material[]>>(5);
 
         private static void SetAccessoryHighlight(int slotId)
         {
@@ -20,7 +20,7 @@ namespace SliderHighlight
             {
                 if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
                 {
-                    _toRemove.Add(new KeyValuePair<Renderer, Material[]>(renderer, renderer.sharedMaterials));
+                    _accMaterialsToRestore.Add(new KeyValuePair<Renderer, Material[]>(renderer, renderer.sharedMaterials));
                     renderer.sharedMaterials = renderer.sharedMaterials.AddToArray(_matSolid);
                 }
             }
@@ -28,13 +28,13 @@ namespace SliderHighlight
 
         private static void ClearAccessoryHighlight()
         {
-            if (_toRemove.Count == 0) return;
-            foreach (var renderer in _toRemove)
+            if (_accMaterialsToRestore.Count == 0) return;
+            foreach (var renderer in _accMaterialsToRestore)
             {
                 if (renderer.Key != null)
                     renderer.Key.sharedMaterials = renderer.Value;
             }
-            _toRemove.Clear();
+            _accMaterialsToRestore.Clear();
         }
     }
 }
