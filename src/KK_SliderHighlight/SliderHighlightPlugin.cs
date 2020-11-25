@@ -20,6 +20,7 @@ namespace SliderHighlight
     [BepInPlugin(GUID, "SliderHighlight", Version)]
     [BepInDependency(KKABMX_Core.GUID, KKABMX_Core.Version)]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
+    [BepInIncompatibility("madevil.kk.AccGotHigh")]
     public partial class SliderHighlightPlugin : BaseUnityPlugin
     {
         public const string GUID = "SliderHighlight";
@@ -78,7 +79,7 @@ namespace SliderHighlight
 
                 InitializeBodySliders();
                 InitializeFaceSliders();
-                
+
                 // todo waste of space on sidebar?
                 // var toggle = e.AddSidebarControl(new SidebarToggle("Highlight on hover", _enabled.Value, this));
                 // toggle.ValueChanged.Subscribe(b => _enabled.Value = b);
