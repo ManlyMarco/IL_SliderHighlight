@@ -199,7 +199,7 @@ namespace SliderHighlight
                         sum += boneWeight.weight3;
                 }
 
-                colors[i] = Color32.Lerp(Color.black, _highlightColor, sum);
+                colors[i] = Color32.Lerp(Color.black, _highlightColor.Value, sum);
             }
 
             mesh.colors32 = colors;

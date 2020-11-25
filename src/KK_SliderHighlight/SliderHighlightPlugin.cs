@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using BepInEx;
+using BepInEx.Configuration;
 using HarmonyLib;
 using KKABMX.Core;
 using KKAPI;
 using KKAPI.Maker;
+using KKAPI.Maker.UI.Sidebar;
 using KKAPI.Utilities;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,11 +32,29 @@ namespace SliderHighlight
         private static Dictionary<Slider, Func<IEnumerable<Transform>>> _boneSliderLookup;
 
         private static bool _isHighlightCleared;
-        private static readonly Color _highlightColor = Color.green;
+
+        private static ConfigEntry<bool> _enabled;
+        private static ConfigEntry<Color> _highlightColor;
 
         private void Start()
         {
-            MakerAPI.MakerBaseLoaded += (s, e) => StartCoroutine(LoadPlugin());
+            _enabled = Config.Bind("Maker Highlights", "Enabled", true, "Enable showing highlights when hovering over sliders and accessory slots in character maker.");
+            _enabled.SettingChanged += (sender, args) =>
+            {
+                if (_matSolid == null) return;
+                HighlightBones();
+                ClearAccessoryHighlight();
+            };
+            _highlightColor = Config.Bind("Maker Highlights", "Color", Color.green, "Color of the highlight. Avoid using transparent colors.");
+            _highlightColor.SettingChanged += (sender, args) =>
+            {
+                if (_matSolid == null) return;
+                HighlightBones();
+                ClearAccessoryHighlight();
+                _matSolid.SetColor("_Color", _highlightColor.Value);
+            };
+
+            MakerAPI.MakerBaseLoaded += (s, e) => StartCoroutine(LoadPlugin(e));
             MakerAPI.MakerExiting += (s, e) => Dispose();
 
             MakerAPI.ReloadCustomInterface += (s, e) => StartCoroutine(
@@ -42,13 +63,13 @@ namespace SliderHighlight
                     () => LoadHighlightBody(MakerAPI.GetCharacterControl())));
         }
 
-        private IEnumerator LoadPlugin()
+        private IEnumerator LoadPlugin(RegisterCustomControlsEvent e)
         {
             var sw = Stopwatch.StartNew();
             try
             {
                 _boneSliderLookup = new Dictionary<Slider, Func<IEnumerable<Transform>>>();
-                
+
                 LoadShaders();
 
                 LoadHighlightBody(MakerAPI.GetCharacterControl());
@@ -57,6 +78,14 @@ namespace SliderHighlight
 
                 InitializeBodySliders();
                 InitializeFaceSliders();
+                
+                // todo waste of space on sidebar?
+                // var toggle = e.AddSidebarControl(new SidebarToggle("Highlight on hover", _enabled.Value, this));
+                // toggle.ValueChanged.Subscribe(b => _enabled.Value = b);
+                // _enabled.SettingChanged += (sender, args) =>
+                // {
+                //     if (!toggle.IsDisposed) toggle.Value = _enabled.Value;
+                // };
             }
             catch (Exception)
             {
@@ -101,7 +130,7 @@ namespace SliderHighlight
 
                 _matSolid = new Material(sha);
                 _matSolid.SetInt("_UseMaterialColor", 1);
-                _matSolid.SetColor("_Color", _highlightColor);
+                _matSolid.SetColor("_Color", _highlightColor.Value);
             }
             catch (Exception)
             {

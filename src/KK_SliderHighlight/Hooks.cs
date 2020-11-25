@@ -17,7 +17,7 @@ namespace SliderHighlight
             [HarmonyPatch(typeof(Selectable), "UpdateSelectionState")]
             private static void OnSliderUpdateSelectionState(Selectable __instance, BaseEventData eventData, int ___m_CurrentSelectionState)
             {
-                if (_smrBod == null) return;
+                if (_smrBod == null || !_enabled.Value) return;
 
                 try
                 {
@@ -69,7 +69,7 @@ namespace SliderHighlight
             [HarmonyPatch(typeof(Slider), "UpdateVisuals")]
             private static void OnUpdateVisuals(Slider __instance)
             {
-                if (_smrBod == null) return;
+                if (_smrBod == null || !_enabled.Value) return;
 
                 try
                 {
