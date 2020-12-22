@@ -128,12 +128,10 @@ namespace SliderHighlight
 
                 _mat = new Material(sha);
                 _mat.SetInt("_UseMaterialColor", 0);
-                _mat.renderQueue = 9999;
 
                 _matSolid = new Material(sha);
                 _matSolid.SetInt("_UseMaterialColor", 1);
                 _matSolid.SetColor("_Color", _highlightColor.Value);
-                _matSolid.renderQueue = 9999;
             }
             catch (Exception)
             {

@@ -13,15 +13,23 @@ namespace SliderHighlight
         {
             ClearAccessoryHighlight();
 
-            if(slotId < 0) return;
+            if (slotId < 0) return;
             var acc = MakerAPI.GetCharacterControl().GetAccessory(slotId);
             if (acc == null) return;
             foreach (var renderer in acc.GetComponentsInChildren<Renderer>())
             {
                 if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
                 {
-                    _accMaterialsToRestore.Add(new KeyValuePair<Renderer, Material[]>(renderer, renderer.sharedMaterials));
-                    renderer.sharedMaterials = renderer.sharedMaterials.AddToArray(_matSolid);
+                    var materials = renderer.sharedMaterials;
+
+                    var mask = materials[materials.Length - 1].GetTexture("_AlphaMask");
+                    _matSolid.SetTexture("_AlphaMask", mask);
+
+                    var tex = materials[materials.Length - 1].GetTexture("_MainTex");
+                    _matSolid.SetTexture("_MainTex", tex);
+
+                    _accMaterialsToRestore.Add(new KeyValuePair<Renderer, Material[]>(renderer, materials));
+                    renderer.sharedMaterials = materials.AddToArray(_matSolid);
                 }
             }
         }
