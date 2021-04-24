@@ -153,6 +153,7 @@ namespace SliderHighlight
                 bones = Enumerable.Empty<Transform>();
             }
 
+            if(_smrFac == null || _smrBod == null) LoadHighlightBody(MakerAPI.GetCharacterControl());
             HighlightSingleRendBones(bones, _smrBod);
             HighlightSingleRendBones(bones, _smrFac);
 
