@@ -40,13 +40,13 @@ namespace SliderHighlight
 
         private void Start()
         {
-            _enabled = Config.Bind("Highlights", "Slider Highlights", true, "Enable showing highlights when hovering over sliders in character maker.");
+            _enabled = Config.Bind("Maker Highlights", "Slider Highlights", true, "Enable showing highlights when hovering over sliders in character maker.");
             _enabled.SettingChanged += (sender, args) =>
             {
                 if (_matSolid == null) return;
                 HighlightBones();
             };
-            _enabledAccessory = Config.Bind("Highlights", "Accessory Highlights", true, "Enable showing highlights when hovering over accessory slots in character maker.");
+            _enabledAccessory = Config.Bind("Maker Highlights", "Accessory Highlights", true, "Enable showing highlights when hovering over accessory slots in character maker.");
             _enabledAccessory.SettingChanged += (sender, args) =>
             {
                 if (_matSolid == null) return;
