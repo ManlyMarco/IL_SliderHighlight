@@ -17,19 +17,21 @@ namespace SliderHighlight
             [HarmonyPatch(typeof(Selectable), "UpdateSelectionState")]
             private static void OnSliderUpdateSelectionState(Selectable __instance, BaseEventData eventData, int ___m_CurrentSelectionState)
             {
-                if (_smrBod == null || !_enabled.Value) return;
+                if (_smrBod == null || (!_enabled.Value && !_enabledAccessory.Value)) return;
 
                 try
                 {
                     //Console.WriteLine($"focus state={___m_CurrentSelectionState} name={__instance.FullPath()}\n{eventData}");
                     if (___m_CurrentSelectionState == 1 || ___m_CurrentSelectionState == 2)
                     {
+                        if (_enabled.Value)
                         if (__instance is Slider sld && _boneSliderLookup.TryGetValue(sld, out var bones))
                             HighlightBones(bones());
                         else
                             HighlightBones();
 
-                        if (__instance is Toggle tgl && IsAccessoryButton(tgl, eventData))
+                        if (_enabledAccessory.Value)
+                            if (__instance is Toggle tgl && IsAccessoryButton(tgl, eventData))
                             SetAccessoryHighlight(GettAccId(tgl));
                         else
                             ClearAccessoryHighlight();
