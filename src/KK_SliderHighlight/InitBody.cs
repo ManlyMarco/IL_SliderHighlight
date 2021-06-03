@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ChaCustom;
 using HarmonyLib;
-using KKABMX.Core;
 using KKAPI.Maker;
 using StrayTech;
 using UnityEngine;
@@ -17,9 +16,8 @@ namespace SliderHighlight
         private void InitializeBodySliders()
         {
             var makerBase = MakerAPI.GetMakerBase();
-            var sibBodyTv = Traverse.Create(makerBase.chaCtrl.GetSibBody());
-            var dictCategory = sibBodyTv.Field<Dictionary<int, List<ShapeInfoBase.CategoryInfo>>>("dictCategory").Value;
-            var dictDst = sibBodyTv.Field<Dictionary<int, ShapeInfoBase.BoneInfo>>("dictDst").Value;
+            var dictCategory = makerBase.chaCtrl.sibBody.dictCategory;
+            var dictDst = makerBase.chaCtrl.sibBody.dictDst;
 
             var idLookup = BoneIdLookups.BoneIdLookupBodyF;
             HookCvsSliders(makerBase.GetComponentInChildren<CvsArm>(true), _boneSliderLookup, idLookup, dictCategory, dictDst);
@@ -34,9 +32,8 @@ namespace SliderHighlight
         private void InitializeFaceSliders()
         {
             var makerBase = MakerAPI.GetMakerBase();
-            var sibFaceTv = Traverse.Create(makerBase.chaCtrl.GetSibFace());
-            var dictCategory = sibFaceTv.Field<Dictionary<int, List<ShapeInfoBase.CategoryInfo>>>("dictCategory").Value;
-            var dictDst = sibFaceTv.Field<Dictionary<int, ShapeInfoBase.BoneInfo>>("dictDst").Value;
+            var dictCategory = makerBase.chaCtrl.sibFace.dictCategory;
+            var dictDst = makerBase.chaCtrl.sibFace.dictDst;
 
             // Everything goes through straight so can be ignored, might be needed if any manual edits are needed
             var idLookup = (Dictionary<int, int[]>)null; //BoneIdLookups.BoneIdLookupFaceF;
