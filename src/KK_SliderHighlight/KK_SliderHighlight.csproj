@@ -80,23 +80,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InitAccessory.cs" />
-    <Compile Include="InitABMX.cs" />
-    <Compile Include="InitBody.cs" />
-    <Compile Include="BoneIdLookups.cs" />
-    <Compile Include="SliderHighlightPlugin.cs" />
-    <Compile Include="Hooks.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bonelyfans.shader" />
-    <EmbeddedResource Include="bonelyfans.unity3d" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\BepInEx.Analyzers.1.0.3\analyzers\dotnet\cs\BepInEx.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\packages\BepInEx.Analyzers.1.0.3\analyzers\dotnet\cs\BepInEx.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\Shared_ShaderHighlight\Shared_ShaderHighlight.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets" Condition="Exists('..\..\packages\IllusionLibs.BepInEx.Harmony.2.3.2\build\IllusionLibs.BepInEx.Harmony.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
