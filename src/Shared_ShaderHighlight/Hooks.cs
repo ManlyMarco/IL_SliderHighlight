@@ -13,28 +13,48 @@ namespace SliderHighlight
             /// Show highlight when hovering over the slider or selecting it by navigating the UI with keyboard/gamepad
             /// hide it when the slider loses focus / mouse cursor leaves
             /// </summary>
+#if KK
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(Selectable), "UpdateSelectionState")]
-            private static void OnSliderUpdateSelectionState(Selectable __instance, BaseEventData eventData, int ___m_CurrentSelectionState)
+            [HarmonyPatch(typeof(Selectable), nameof(Selectable.UpdateSelectionState))]
+            private static void OnSliderUpdateSelectionState(Selectable __instance, BaseEventData eventData)
+            {
+                HandleSelectionUpdate(__instance, eventData, __instance.m_CurrentSelectionState);
+            }
+#elif KKS
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(Selectable), nameof(Selectable.EvaluateAndTransitionToSelectionState))]
+            private static void OnSliderUpdateSelectionState(Selectable __instance)
+            {
+                // bug no eventdata available, need some other way to tell if cursor is hovering over an acc slot buttom
+                HandleSelectionUpdate(__instance, null, __instance.currentSelectionState);
+            }
+#endif
+
+            private static void HandleSelectionUpdate(Selectable __instance, BaseEventData eventData, Selectable.SelectionState currentSelectionState)
             {
                 if (_smrBod == null || (!_enabled.Value && !_enabledAccessory.Value)) return;
 
                 try
                 {
                     //Console.WriteLine($"focus state={___m_CurrentSelectionState} name={__instance.FullPath()}\n{eventData}");
-                    if (___m_CurrentSelectionState == 1 || ___m_CurrentSelectionState == 2)
+                    if (currentSelectionState == Selectable.SelectionState.Highlighted ||
+                        currentSelectionState == Selectable.SelectionState.Pressed)
                     {
                         if (_enabled.Value)
-                        if (__instance is Slider sld && _boneSliderLookup.TryGetValue(sld, out var bones))
-                            HighlightBones(bones());
-                        else
-                            HighlightBones();
+                        {
+                            if (__instance is Slider sld && _boneSliderLookup.TryGetValue(sld, out var bones))
+                                HighlightBones(bones());
+                            else
+                                HighlightBones();
+                        }
 
                         if (_enabledAccessory.Value)
+                        {
                             if (__instance is Toggle tgl && IsAccessoryButton(tgl, eventData))
-                            SetAccessoryHighlight(GettAccId(tgl));
-                        else
-                            ClearAccessoryHighlight();
+                                SetAccessoryHighlight(GettAccId(tgl));
+                            else
+                                ClearAccessoryHighlight();
+                        }
                     }
                     else
                     {
@@ -68,7 +88,7 @@ namespace SliderHighlight
             /// When dragging the slider turn off the highlight so user can see
             /// </summary>
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(Slider), "UpdateVisuals")]
+            [HarmonyPatch(typeof(Slider), nameof(Slider.UpdateVisuals))]
             private static void OnUpdateVisuals(Slider __instance)
             {
                 if (_smrBod == null || !_enabled.Value) return;

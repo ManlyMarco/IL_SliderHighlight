@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using KKAPI.Maker;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace SliderHighlight
             ClearAccessoryHighlight();
 
             if (slotId < 0) return;
-            var acc = MakerAPI.GetCharacterControl().GetAccessory(slotId);
+            var acc = MakerAPI.GetCharacterControl().GetAccessoryObject(slotId);
             if (acc == null) return;
             foreach (var renderer in acc.GetComponentsInChildren<Renderer>())
             {
@@ -22,8 +23,10 @@ namespace SliderHighlight
                 {
                     var materials = renderer.sharedMaterials;
 
+#if !KKS //todo missing shader prop, maybe different property name?
                     var mask = materials[materials.Length - 1].GetTexture("_AlphaMask");
                     _matSolid.SetTexture("_AlphaMask", mask);
+#endif
 
                     var tex = materials[materials.Length - 1].GetTexture("_MainTex");
                     _matSolid.SetTexture("_MainTex", tex);
