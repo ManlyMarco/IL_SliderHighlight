@@ -9,9 +9,7 @@ using HarmonyLib;
 using KKABMX.Core;
 using KKAPI;
 using KKAPI.Maker;
-using KKAPI.Maker.UI.Sidebar;
 using KKAPI.Utilities;
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +18,6 @@ namespace SliderHighlight
     [BepInPlugin(GUID, "SliderHighlight", Version)]
     [BepInDependency(KKABMX_Core.GUID, KKABMX_Core.Version)]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
-    [BepInIncompatibility("madevil.kk.AccGotHigh")]
     public partial class SliderHighlightPlugin : BaseUnityPlugin
     {
         public const string GUID = "SliderHighlight";
