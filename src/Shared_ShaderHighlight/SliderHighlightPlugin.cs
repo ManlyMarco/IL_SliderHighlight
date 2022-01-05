@@ -10,6 +10,7 @@ using KKABMX.Core;
 using KKAPI;
 using KKAPI.Maker;
 using KKAPI.Utilities;
+using Screencap;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ namespace SliderHighlight
     [BepInPlugin(GUID, "SliderHighlight", Version)]
     [BepInDependency(KKABMX_Core.GUID, KKABMX_Core.Version)]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
+    [BepInDependency(ScreenshotManager.GUID, ScreenshotManager.Version)]
     public partial class SliderHighlightPlugin : BaseUnityPlugin
     {
         public const string GUID = "SliderHighlight";
@@ -104,6 +106,10 @@ namespace SliderHighlight
 
             sw.Start();
             InitializeAbmxSliders();
+            
+            ScreenshotManager.OnPreCapture += OnScreenshotPreCapture;
+            ScreenshotManager.OnPostCapture += OnScreenshotPostCapture;
+
             Logger.LogDebug($"Initialized in {sw.ElapsedMilliseconds}ms");
         }
 
@@ -115,6 +121,9 @@ namespace SliderHighlight
             _boneSliderLookup = null;
             _isHighlightCleared = false;
             _accMaterialsToRestore.Clear();
+            
+            ScreenshotManager.OnPreCapture -= OnScreenshotPreCapture;
+            ScreenshotManager.OnPostCapture -= OnScreenshotPostCapture;
         }
 
         private static void LoadShaders()
@@ -141,6 +150,25 @@ namespace SliderHighlight
             {
                 if (ab != null) ab.Unload(true);
                 throw;
+            }
+        }
+
+        private static void OnScreenshotPreCapture()
+        {
+            if (MakerAPI.InsideAndLoaded && _smrBod != null)
+            {
+                ClearAccessoryHighlight();
+                _smrBod.enabled = false;
+                _smrFac.enabled = false;
+            }
+        }
+
+        private static void OnScreenshotPostCapture()
+        {
+            if (MakerAPI.InsideAndLoaded && _smrBod != null)
+            {
+                _smrBod.enabled = true;
+                _smrFac.enabled = true;
             }
         }
     }
