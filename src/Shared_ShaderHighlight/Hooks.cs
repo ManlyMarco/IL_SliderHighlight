@@ -33,6 +33,7 @@ namespace SliderHighlight
             private static void HandleSelectionUpdate(Selectable __instance, BaseEventData eventData, Selectable.SelectionState currentSelectionState)
             {
                 if (_smrBod == null || (!_enabled.Value && !_enabledAccessory.Value)) return;
+                if (IsAdvancedWindowCurrentlyHovering) return;
 
                 try
                 {
@@ -92,6 +93,7 @@ namespace SliderHighlight
             private static void OnUpdateVisuals(Slider __instance)
             {
                 if (_smrBod == null || !_enabled.Value) return;
+                if (IsAdvancedWindowCurrentlyHovering) return;
 
                 try
                 {

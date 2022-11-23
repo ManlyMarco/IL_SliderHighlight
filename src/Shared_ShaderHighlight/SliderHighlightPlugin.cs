@@ -37,8 +37,12 @@ namespace SliderHighlight
         private static ConfigEntry<bool> _enabledAccessory;
         private static ConfigEntry<Color> _highlightColor;
 
+        private static SliderHighlightPlugin _instance;
+
         private void Start()
         {
+            _instance = this;
+
             _enabled = Config.Bind("Maker Highlights", "Slider Highlights", true, "Enable showing highlights when hovering over sliders in character maker.");
             _enabled.SettingChanged += (sender, args) =>
             {
@@ -117,7 +121,7 @@ namespace SliderHighlight
         {
             if (_smrBod) Destroy(_smrBod.gameObject);
             if (_smrFac) Destroy(_smrFac.gameObject);
-            _hi?.UnpatchAll(_hi.Id);
+            _hi?.UnpatchSelf();
             _boneSliderLookup = null;
             _isHighlightCleared = false;
             _accMaterialsToRestore.Clear();
